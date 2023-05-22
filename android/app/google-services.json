@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "593962406148",
+    "project_id": "gdscvit-icebreaker-hack",
+    "storage_bucket": "gdscvit-icebreaker-hack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593962406148:android:03830ec6de7613bf77c051",
+        "android_client_info": {
+          "package_name": "me.chandramdutta.gdscvit_icebreaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593962406148-fugta77dl59pvk46mc9qsu2rus7t3u1j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.chandramdutta.gdscvit_icebreaker",
+            "certificate_hash": "b8cb8f32d5fc36d8eacd01e578cb42c5af813c5a"
+          }
+        },
+        {
+          "client_id": "593962406148-bq2k2gj1u6vlh9kftbim4iul5ud8s4jf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH5M7ukhzc8FxCq-pN3i71PW5oeSNt6TY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593962406148-bq2k2gj1u6vlh9kftbim4iul5ud8s4jf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "593962406148-3895lhotljtdu18bvcp5mbr41lo34ots.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.chandramdutta.gdscvitIcebreakerHack"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
