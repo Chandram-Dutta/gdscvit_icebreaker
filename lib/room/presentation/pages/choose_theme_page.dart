@@ -89,6 +89,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 1',
+                  hero: 1,
                 ),
               ),
               GestureDetector(
@@ -102,6 +103,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 2',
+                  hero: 2,
                 ),
               ),
               GestureDetector(
@@ -115,6 +117,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 3',
+                  hero: 3,
                 ),
               ),
               GestureDetector(
@@ -128,6 +131,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 4',
+                  hero: 4,
                 ),
               ),
               GestureDetector(
@@ -141,6 +145,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 5',
+                  hero: 5,
                 ),
               ),
               GestureDetector(
@@ -154,6 +159,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                       },
                 child: const ChooseThemeCard(
                   title: 'Theme 6',
+                  hero: 6,
                 ),
               ),
             ],
@@ -168,27 +174,33 @@ class ChooseThemeCard extends StatelessWidget {
   const ChooseThemeCard({
     super.key,
     required this.title,
+    required this.hero,
   });
 
   final String title;
+  final int hero;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      height: 200,
-      width: 200,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.75),
-            blurRadius: 20,
-          ),
-        ],
+    return Hero(
+      tag: hero,
+      child: Container(
+        alignment: Alignment.center,
+        height: 200,
+        width: 200,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.background,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color:
+                  Theme.of(context).colorScheme.onBackground.withOpacity(0.75),
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: Text(title),
       ),
-      child: Text(title),
     );
   }
 }
