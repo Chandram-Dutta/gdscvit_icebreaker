@@ -14,10 +14,10 @@ class FirebaseGameRepository extends GameRepository {
   @override
   Future<void> changeJoinable({
     required String roomId,
-    required bool joinable,
+    required String roomState,
   }) async {
     await _roomCollection.doc(roomId).update({
-      'joinable': joinable,
+      'room_state': roomState,
     });
   }
 
@@ -25,27 +25,39 @@ class FirebaseGameRepository extends GameRepository {
   Future changeNextChoosable({
     required String roomId,
   }) async {
-    final List<Map<String, dynamic>> listOfUsers =
-        await _roomCollection.doc(roomId).collection('users').get().then(
-              (value) =>
-                  value.docs.map((e) => e.data() as Map<String, bool>).toList(),
-            );
-    final int index = listOfUsers.indexWhere((element) => element['choose']);
-    try {
-      final String userId = listOfUsers[index]['id'];
-      final String newUserId = listOfUsers[index + 1]['id'];
-      await _roomCollection
-          .doc(roomId)
-          .collection('users')
-          .doc(newUserId)
-          .update({
-        'choose': true,
+    final nameOfUsers = [];
+    final idOfUsers = [];
+    final choosableId = await _roomCollection
+        .doc(roomId)
+        .get()
+        .then((value) => value.get('choosable_id'));
+    final users = await _roomCollection.doc(roomId).collection('users').get();
+    for (var element in users.docs) {
+      nameOfUsers.add(element.data()['name']);
+    }
+    for (var element in users.docs) {
+      idOfUsers.add(element.data()['id']);
+    }
+    int indexes = 0;
+    if (choosableId == '') {
+      await _roomCollection.doc(roomId).update({
+        'choosable_id': idOfUsers[0],
+        'choosable_index': 0,
+        'choosable_name': nameOfUsers[0],
       });
-      await _roomCollection.doc(roomId).collection('users').doc(userId).update({
-        'choose': false,
-      });
-    } catch (e) {
-      return Exception('No more users left');
+    } else {
+      indexes = idOfUsers.indexOf(choosableId);
+      if (indexes + 1 == idOfUsers.length) {
+        await _roomCollection.doc(roomId).update({
+          'room_state': 'ended',
+        });
+      } else {
+        await _roomCollection.doc(roomId).update({
+          'choosable_id': idOfUsers[(indexes + 1)],
+          'choosable_index': indexes + 1,
+          'choosable_name': nameOfUsers[(indexes + 1)],
+        });
+      }
     }
   }
 
@@ -55,7 +67,7 @@ class FirebaseGameRepository extends GameRepository {
     required String prompt,
   }) async {
     await _roomCollection.doc(roomId).update({
-      'prompt': prompt,
+      'present_prompt': prompt,
     });
   }
 }

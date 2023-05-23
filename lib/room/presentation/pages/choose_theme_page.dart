@@ -85,11 +85,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 1');
+                            .createRoomAndAddUser(roomType: 'Animals');
                         hero = 1;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 1',
+                  title: 'Animals',
                   hero: 1,
                 ),
               ),
@@ -99,11 +99,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 2');
+                            .createRoomAndAddUser(roomType: 'Scenary');
                         hero = 2;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 2',
+                  title: 'Scenary',
                   hero: 2,
                 ),
               ),
@@ -113,11 +113,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 3');
+                            .createRoomAndAddUser(roomType: 'Space');
                         hero = 3;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 3',
+                  title: 'Space',
                   hero: 3,
                 ),
               ),
@@ -127,11 +127,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 4');
+                            .createRoomAndAddUser(roomType: 'Tech');
                         hero = 4;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 4',
+                  title: 'Tech',
                   hero: 4,
                 ),
               ),
@@ -141,11 +141,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 5');
+                            .createRoomAndAddUser(roomType: 'Food');
                         hero = 5;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 5',
+                  title: 'Food',
                   hero: 5,
                 ),
               ),
@@ -155,11 +155,11 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
                     : () {
                         ref
                             .read(chooseThemePageControllerProvider.notifier)
-                            .createRoomAndAddUser(roomType: 'Theme 6');
+                            .createRoomAndAddUser(roomType: 'Nature');
                         hero = 6;
                       },
                 child: const ChooseThemeCard(
-                  title: 'Theme 6',
+                  title: 'Nature',
                   hero: 6,
                 ),
               ),

@@ -10,6 +10,6 @@ abstract class GameRepository {
 
   Future<void> changeJoinable({
     required String roomId,
-    required bool joinable,
+    required String roomState,
   });
 }

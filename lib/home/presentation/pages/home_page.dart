@@ -123,7 +123,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     .joinRoom(
                                       roomId: _roomIDController.text,
                                     ),
-                                child: const Text("Join"),
+                                child: state.isLoading
+                                    ? const CupertinoActivityIndicator()
+                                    : const Text("Join"),
                               ),
                             ],
                           );

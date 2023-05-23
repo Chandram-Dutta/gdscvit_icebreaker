@@ -10,4 +10,8 @@ abstract class RoomRepository {
   });
   Future<void> leaveRoom({required String roomId, required String userId});
   Query<Map<String, dynamic>> getRoomUsers({required String roomId});
+
+  Stream<String> getJoinable({required String roomId});
+
+  Stream<DocumentSnapshot> getRoomState({required String roomId});
 }
