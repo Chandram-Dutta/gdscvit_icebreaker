@@ -42,6 +42,7 @@ class _ChooseThemePageState extends ConsumerState<ChooseThemePage> {
               page: WillPopScope(
                 onWillPop: () async => false,
                 child: WaitRoomPage(
+                  isOwner: true,
                   hero: hero,
                   roomID: state.value,
                 ),

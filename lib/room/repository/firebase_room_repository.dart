@@ -31,6 +31,7 @@ class FirebaseRoomRepository extends RoomRepository {
     required String roomId,
     required String userId,
     required bool roomOwner,
+    required String name,
   }) async {
     final noOfUsers = await _roomCollection
         .doc(roomId)
@@ -42,7 +43,8 @@ class FirebaseRoomRepository extends RoomRepository {
         'id': userId,
         'joinedAt': FieldValue.serverTimestamp(),
         'choose': false,
-        'roomOwner': roomOwner
+        'roomOwner': roomOwner,
+        'name': name,
       });
       if (noOfUsers == 3) {
         await _roomCollection.doc(roomId).update({
@@ -55,14 +57,51 @@ class FirebaseRoomRepository extends RoomRepository {
   }
 
   @override
-  Future<void> leaveRoom(
-      {required String roomId, required String userId}) async {
-    await _roomCollection.doc(roomId).collection('users').doc(userId).delete();
+  Future<void> leaveRoom({
+    required String roomId,
+    required String userId,
+  }) async {
+    if (await _roomCollection
+            .doc(roomId)
+            .collection('users')
+            .get()
+            .then((value) => value.docs.length) ==
+        1) {
+      await _roomCollection.doc(roomId).delete();
+    } else {
+      if (await _roomCollection
+              .doc(roomId)
+              .collection('users')
+              .doc(userId)
+              .get()
+              .then((value) => value.data()!['roomOwner']) ==
+          true) {
+        final users = await _roomCollection
+            .doc(roomId)
+            .collection('users')
+            .get()
+            .then((value) => value.docs);
+        if (users.length > 1) {
+          await _roomCollection
+              .doc(roomId)
+              .collection('users')
+              .doc(users[1].id)
+              .update({
+            'roomOwner': true,
+          });
+        }
+      }
+      await _roomCollection
+          .doc(roomId)
+          .collection('users')
+          .doc(userId)
+          .delete();
+    }
   }
 
   @override
-  Stream<QuerySnapshot<Object?>> getRoomUsers({required String roomId}) {
-    return _roomCollection.doc(roomId).collection('users').snapshots();
+  Query<Map<String, dynamic>> getRoomUsers({required String roomId}) {
+    return _roomCollection.doc(roomId).collection('users').orderBy('joinedAt');
   }
 }
 

@@ -18,6 +18,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   google_fonts: ^4.0.4
   google_sign_in: ^6.1.0
+  openai_dalle_wrapper: ^1.0.0
 
 dev_dependencies:
   flutter_test:

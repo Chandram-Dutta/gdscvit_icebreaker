@@ -485,6 +485,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  openai_dalle_wrapper:
+    dependency: "direct main"
+    description:
+      name: openai_dalle_wrapper
+      sha256: de4ff9f94eed4f2677c11fdadea64ac1b094cc971aff166b55674b1dd95f57c7
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   package_config:
     dependency: transitive
     description:

@@ -4,25 +4,24 @@ import 'package:gdscvit_icebreaker/authentication/repository/firebase_auth_repos
 import 'package:gdscvit_icebreaker/room/repository/firebase_room_repository.dart';
 import 'package:gdscvit_icebreaker/room/repository/room_repository.dart';
 
-class ChooseThemePageController extends StateNotifier<AsyncValue<String>> {
-  ChooseThemePageController({
+class JoinRoomController extends StateNotifier<AsyncValue<String>> {
+  JoinRoomController({
     required this.roomRepository,
     required this.authRepository,
   }) : super(const AsyncData<String>(""));
   final RoomRepository roomRepository;
   final AuthRepository authRepository;
 
-  Future<void> createRoomAndAddUser({required String roomType}) async {
+  Future<void> joinRoom({
+    required String roomId,
+  }) async {
     state = const AsyncLoading<String>();
     state = await AsyncValue.guard<String>(() async {
-      final roomId = await roomRepository.createRoom(
-        roomType: roomType,
-      );
       final userId = authRepository.currentUser!.uid;
       await roomRepository.joinRoom(
         roomId: roomId,
         userId: userId,
-        roomOwner: true,
+        roomOwner: false,
         name: authRepository.currentUser!.displayName!,
       );
       return roomId;
@@ -30,10 +29,10 @@ class ChooseThemePageController extends StateNotifier<AsyncValue<String>> {
   }
 }
 
-final chooseThemePageControllerProvider = StateNotifierProvider.autoDispose<
-    ChooseThemePageController, AsyncValue<String>>(
+final joinRoomControllerProvider =
+    StateNotifierProvider.autoDispose<JoinRoomController, AsyncValue<String>>(
   (ref) {
-    return ChooseThemePageController(
+    return JoinRoomController(
       roomRepository: ref.watch(firebaseRoomRepositoryProvider),
       authRepository: ref.watch(firebaseAuthRepositoryProvider),
     );

@@ -1,21 +1,27 @@
+import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gdscvit_icebreaker/authentication/repository/firebase_auth_repository.dart';
+import 'package:gdscvit_icebreaker/room/repository/firebase_room_repository.dart';
 
-class WaitRoomPage extends StatefulWidget {
+class WaitRoomPage extends ConsumerStatefulWidget {
   const WaitRoomPage({
     super.key,
     required this.roomID,
     required this.hero,
+    required this.isOwner,
   });
 
   final String roomID;
   final int hero;
+  final bool isOwner;
 
   @override
-  State<WaitRoomPage> createState() => _WaitRoomPageState();
+  ConsumerState<WaitRoomPage> createState() => _WaitRoomPageState();
 }
 
-class _WaitRoomPageState extends State<WaitRoomPage> {
+class _WaitRoomPageState extends ConsumerState<WaitRoomPage> {
   bool isVisible = true;
 
   void delay() {
@@ -55,7 +61,16 @@ class _WaitRoomPageState extends State<WaitRoomPage> {
                   Theme.of(context).colorScheme.onError,
                 ),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                ref.read(firebaseRoomRepositoryProvider).leaveRoom(
+                      roomId: widget.roomID,
+                      userId: ref
+                          .watch(firebaseAuthRepositoryProvider)
+                          .currentUser!
+                          .uid,
+                    );
+                Navigator.of(context).pop();
+              },
               child: const Icon(Icons.call_end),
             ),
           )
@@ -109,9 +124,36 @@ class _WaitRoomPageState extends State<WaitRoomPage> {
                                 ? CrossFadeState.showFirst
                                 : CrossFadeState.showSecond,
                             firstChild: const SizedBox(),
-                            secondChild: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text("Hello"),
+                            secondChild: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: FirestoreListView<Map<String, dynamic>>(
+                                shrinkWrap: true,
+                                query: ref
+                                    .watch(firebaseRoomRepositoryProvider)
+                                    .getRoomUsers(
+                                      roomId: widget.roomID,
+                                    ),
+                                itemBuilder: (context, snapshot) {
+                                  return ListTile(
+                                    leading: snapshot.data()['roomOwner']
+                                        ? const Icon(Icons.diamond_rounded)
+                                        : null,
+                                    title: Text(snapshot.data()['name']),
+                                    trailing: widget.isOwner &&
+                                            snapshot.data()['id'] ==
+                                                ref
+                                                    .watch(
+                                                        firebaseAuthRepositoryProvider)
+                                                    .currentUser!
+                                                    .uid
+                                        ? ElevatedButton(
+                                            onPressed: () {},
+                                            child: const Text("Start"),
+                                          )
+                                        : null,
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),

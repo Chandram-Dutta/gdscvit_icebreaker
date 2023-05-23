@@ -1,19 +1,25 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gdscvit_icebreaker/home/presentation/controller/join_room_controller.dart';
 import 'package:gdscvit_icebreaker/main.dart';
 import 'package:gdscvit_icebreaker/room/presentation/pages/choose_theme_page.dart';
 
-class HomePage extends StatefulWidget {
+import '../../../room/presentation/pages/wait_room_page.dart';
+
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({
     super.key,
   });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   bool fade = true;
-  void delay() {
+  final TextEditingController _roomIDController = TextEditingController();
+  void delay() async {
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         fade = false;
@@ -28,7 +34,48 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    _roomIDController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final AsyncValue<String> state = ref.watch(joinRoomControllerProvider);
+    ref.listen<AsyncValue>(
+      joinRoomControllerProvider,
+      (_, state) {
+        if (!state.isRefreshing && state.hasError) {
+          showCupertinoDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+              title: const Text("Error"),
+              content: const Text("An error occured. Please try again later."),
+              actions: [
+                CupertinoDialogAction(
+                  child: const Text("OK"),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          );
+        } else if (!state.isLoading && state.hasValue) {
+          Navigator.pushReplacement(
+            context,
+            createRoute(
+              page: WillPopScope(
+                onWillPop: () async => false,
+                child: WaitRoomPage(
+                  isOwner: false,
+                  hero: 0,
+                  roomID: state.value,
+                ),
+              ),
+            ),
+          );
+        }
+      },
+    );
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -51,7 +98,37 @@ class _HomePageState extends State<HomePage> {
               Hero(
                 tag: 'first-box',
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Enter room ID"),
+                            content: TextField(
+                              decoration: const InputDecoration(
+                                hintText: "Room ID",
+                              ),
+                              controller: _roomIDController,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () => ref
+                                    .read(joinRoomControllerProvider.notifier)
+                                    .joinRoom(
+                                      roomId: _roomIDController.text,
+                                    ),
+                                child: const Text("Join"),
+                              ),
+                            ],
+                          );
+                        });
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     height: 200,
