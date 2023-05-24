@@ -20,10 +20,10 @@ class FirebaseRoomRepository extends RoomRepository {
     String prompt = "";
     switch (roomType) {
       case 'Animals':
-        prompt = sceneryPrompts[Random().nextInt(sceneryPrompts.length)];
+        prompt = sceneryPrompts[Random().nextInt(animalPrompts.length)];
         break;
-      case 'Scenery':
-        prompt = animalPrompts[Random().nextInt(animalPrompts.length)];
+      case 'Scenary':
+        prompt = animalPrompts[Random().nextInt(sceneryPrompts.length)];
         break;
       case 'Food':
         prompt = foodPrompts[Random().nextInt(foodPrompts.length)];
