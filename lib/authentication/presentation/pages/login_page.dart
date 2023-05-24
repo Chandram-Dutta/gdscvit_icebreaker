@@ -1,13 +1,21 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gdscvit_icebreaker/authentication/presentation/controllers/login_page_controller.dart';
+import 'package:gdscvit_icebreaker/home/presentation/pages/signedin_landing_page.dart';
+import 'package:gdscvit_icebreaker/main.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool fade = true;
   void delay() {
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -24,7 +32,45 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final AsyncValue<void> state = ref.watch(loginPageControllerProvider);
+    ref.listen<AsyncValue>(
+      loginPageControllerProvider,
+      (_, state) {
+        if (!state.isRefreshing && state.hasError) {
+          print(state.error.toString());
+          showCupertinoDialog(
+            context: context,
+            builder: (_) => CupertinoAlertDialog(
+              title: const Text("Error"),
+              content: Text(state.error.toString()),
+              actions: [
+                CupertinoDialogAction(
+                  child: const Text("OK"),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          );
+        } else if (!state.isLoading && state.hasValue) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            createRoute(
+              page: const SignedInLandingPage(),
+            ),
+            (route) => false,
+          );
+        }
+      },
+    );
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -93,6 +139,27 @@ class _LoginPageState extends State<LoginPage> {
                             vertical: 6,
                           ),
                           child: TextFormField(
+                            controller: _nameController,
+                            decoration: const InputDecoration(
+                              labelText: "Name",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                                borderSide: BorderSide(
+                                  width: 5,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 6,
+                          ),
+                          child: TextFormField(
+                            controller: _emailController,
                             decoration: const InputDecoration(
                               labelText: "Email",
                               border: OutlineInputBorder(
@@ -112,6 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                             vertical: 6,
                           ),
                           child: TextFormField(
+                            controller: _passwordController,
+                            obscureText: true,
                             decoration: const InputDecoration(
                               labelText: "Password",
                               border: OutlineInputBorder(
@@ -140,7 +209,16 @@ class _LoginPageState extends State<LoginPage> {
                                   child: SizedBox(
                                     height: 50,
                                     child: FilledButton(
-                                      onPressed: () {},
+                                      onPressed: state.isLoading
+                                          ? null
+                                          : () => ref
+                                              .read(loginPageControllerProvider
+                                                  .notifier)
+                                              .signInWithEmailAndPassword(
+                                                email: _emailController.text,
+                                                password:
+                                                    _passwordController.text,
+                                              ),
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
@@ -161,7 +239,9 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                       ),
-                                      child: const Text("Login"),
+                                      child: state.isLoading
+                                          ? const CupertinoActivityIndicator()
+                                          : const Text("Login"),
                                     ),
                                   ),
                                 ),
@@ -170,7 +250,17 @@ class _LoginPageState extends State<LoginPage> {
                                   child: SizedBox(
                                     height: 50,
                                     child: FilledButton(
-                                      onPressed: () {},
+                                      onPressed: state.isLoading
+                                          ? null
+                                          : () => ref
+                                              .read(loginPageControllerProvider
+                                                  .notifier)
+                                              .signUpWithEmailAndPassword(
+                                                email: _emailController.text,
+                                                password:
+                                                    _passwordController.text,
+                                                name: _nameController.text,
+                                              ),
                                       style: ButtonStyle(
                                         foregroundColor:
                                             MaterialStateProperty.all(
@@ -191,7 +281,9 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                       ),
-                                      child: const Text("Sign Up"),
+                                      child: state.isLoading
+                                          ? const CupertinoActivityIndicator()
+                                          : const Text("Sign Up"),
                                     ),
                                   ),
                                 ),

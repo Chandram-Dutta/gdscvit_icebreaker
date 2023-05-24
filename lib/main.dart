@@ -26,6 +26,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
         scheme: FlexScheme.blueWhale,
         useMaterial3: true,

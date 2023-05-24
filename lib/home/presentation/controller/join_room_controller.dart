@@ -22,7 +22,7 @@ class JoinRoomController extends StateNotifier<AsyncValue<String>> {
         roomId: roomId,
         userId: userId,
         roomOwner: false,
-        name: authRepository.currentUser!.displayName!,
+        name: authRepository.currentUser!.displayName.toString(),
       );
       return roomId;
     });

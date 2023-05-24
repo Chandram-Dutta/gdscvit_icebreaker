@@ -7,17 +7,27 @@ class FirebaseAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<void> createUserWithEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement createUserWithEmailAndPassword
-    throw UnimplementedError();
+  Future<void> createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await _firebaseAuth.currentUser?.updateDisplayName(name);
   }
 
   @override
-  Future<void> signInWithEmailAndPassword(
-      {required String email, required String password}) {
-    // TODO: implement signInWithEmailAndPassword
-    throw UnimplementedError();
+  Future<void> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
   }
 
   @override

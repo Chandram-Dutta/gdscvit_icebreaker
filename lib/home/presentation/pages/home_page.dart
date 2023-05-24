@@ -50,7 +50,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             context: context,
             builder: (_) => CupertinoAlertDialog(
               title: const Text("Error"),
-              content: const Text("An error occured. Please try again later."),
+              content: Text(
+                state.error.toString(),
+              ),
               actions: [
                 CupertinoDialogAction(
                   child: const Text("OK"),

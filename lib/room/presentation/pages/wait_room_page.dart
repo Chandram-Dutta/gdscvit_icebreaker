@@ -56,6 +56,7 @@ class _WaitRoomPageState extends ConsumerState<WaitRoomPage> {
       apiKey: openAIKey,
     );
     final imagePath = await openAi.generateImage(prompt);
+    // const imagePath = "https://placehold.it/300x300";
     return imagePath;
   }
 
@@ -194,98 +195,107 @@ class _WaitRoomPageState extends ConsumerState<WaitRoomPage> {
                                         ),
                                       )
                                     : const SizedBox(),
-                                (streamSnapshot.data!['room_state'] ==
-                                            "playing" &&
-                                        streamSnapshot.data!['choosable_id'] ==
-                                            ref
-                                                .watch(
-                                                    firebaseAuthRepositoryProvider)
-                                                .currentUser!
-                                                .uid)
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              height: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .background,
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onBackground
-                                                        .withOpacity(0.2),
-                                                    blurRadius: 12,
-                                                    offset: const Offset(0, 4),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Center(
-                                                child: FutureBuilder(
-                                                  builder: (context, snapshot) {
-                                                    return snapshot.hasData
-                                                        ? Image.network(snapshot
-                                                            .data
-                                                            .toString())
-                                                        : const CircularProgressIndicator();
-                                                  },
-                                                  future: getImage(
-                                                    streamSnapshot.data![
-                                                        'present_prompt'],
+                                Builder(builder: (context) {
+                                  return (streamSnapshot.data!['room_state'] ==
+                                              "playing" &&
+                                          streamSnapshot
+                                                  .data!['choosable_id'] ==
+                                              ref
+                                                  .watch(
+                                                      firebaseAuthRepositoryProvider)
+                                                  .currentUser!
+                                                  .uid)
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .background,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onBackground
+                                                          .withOpacity(0.2),
+                                                      blurRadius: 12,
+                                                      offset:
+                                                          const Offset(0, 4),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Center(
+                                                  child: FutureBuilder(
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      return snapshot.hasData
+                                                          ? Image.network(
+                                                              snapshot.data
+                                                                  .toString())
+                                                          : const CircularProgressIndicator();
+                                                    },
+                                                    future: getImage(
+                                                      streamSnapshot.data![
+                                                          'present_prompt'],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Card(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: TextField(
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    labelText:
-                                                        "Guess The Image",
-                                                    border:
-                                                        OutlineInputBorder(),
+                                              const SizedBox(
+                                                height: 64,
+                                              ),
+                                              Card(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: TextField(
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      labelText:
+                                                          "Guess The Image",
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                    ),
+                                                    controller: _controller,
                                                   ),
-                                                  controller: _controller,
                                                 ),
                                               ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                await ref
-                                                    .watch(
-                                                        firebaseGameRepositoyProvider)
-                                                    .changePrompt(
-                                                      roomId: widget.roomID,
-                                                      prompt: _controller.text,
-                                                    );
-                                                await ref
-                                                    .watch(
-                                                        firebaseGameRepositoyProvider)
-                                                    .changeNextChoosable(
-                                                      roomId: widget.roomID,
-                                                    );
-                                              },
-                                              child: const Text(
-                                                "Done Guessing?",
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    : const SizedBox(),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  await ref
+                                                      .watch(
+                                                          firebaseGameRepositoyProvider)
+                                                      .changePrompt(
+                                                        roomId: widget.roomID,
+                                                        prompt:
+                                                            _controller.text,
+                                                      );
+                                                  await ref
+                                                      .watch(
+                                                          firebaseGameRepositoyProvider)
+                                                      .changeNextChoosable(
+                                                        roomId: widget.roomID,
+                                                      );
+                                                },
+                                                child: const Text(
+                                                  "Done Guessing?",
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : const SizedBox();
+                                }),
                                 (streamSnapshot.data!['room_state'] ==
                                             "playing" &&
                                         streamSnapshot.data!['choosable_id'] !=
